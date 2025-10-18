@@ -33,8 +33,6 @@ jobs:
         run: |
           cd ~/Downloads
           ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100
-      - name: install docker 
-        run: |
           sudo apt update
           sudo apt install -y ca-certificates curl gnupg
 
@@ -51,9 +49,3 @@ jobs:
           sudo systemctl enable docker
           sudo systemctl start docker
           sudo docker ps
-          
-      
- 
-
-         
-          
