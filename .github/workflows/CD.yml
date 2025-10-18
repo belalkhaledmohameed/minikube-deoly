@@ -1,82 +1,47 @@
-name: Production
+name: Example 07 - Deployment
+run-name: Example 07 - Deployment
 
-# Exclude the workflow to run on changes to the helm chart
-on:
-  push:
+on: 
+   push:
     branches:
-      - Deploying
+      - production 
+  
+    
+
 jobs:
-  run-DevOps_Project:
+  run-tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-      - name: Configure kubectl
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-      
-      - name: Check if EKS cluster exists
-        id: check-eks
+      - name: Setup SSH key
         run: |
-          if aws eks describe-cluster --name demo-cluster --region us-east-1; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-            curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-            sudo mv /tmp/eksctl /usr/local/bin/
-            eksctl version
+          mkdir -p ~/Downloads
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/Downloads/Dploy-pipeline.pem
+          chmod 400 ~/Downloads/Dploy-pipeline.pem
+          ssh-keyscan -H 54.146.202.100 >> ~/.ssh/known_hosts
       
-            
-      
+      - name: Deploy to Google Cloud # in this step i moved that folder i create on EC2 and i ssh on it and i will pull the update from remote branch to production branch and at exmple 2 ii push on master branch that it the development branch 
+        run: |
+          cd ~/Downloads
+          ssh -i "Dploy-pipeline.pem" ubuntu@ec2-54-146-202-100.compute-1.amazonaws.com
+      - name: install docker 
+        run: |
+          sudo apt update
+          sudo apt install -y ca-certificates curl gnupg
+
+          sudo install -m 0755 -d /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+          echo \
+             "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+             https://download.docker.com/linux/ubuntu \
+             $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+          sudo apt update
+          sudo apt install -y docker-ce docker-ce-cli containerd.io
+          sudo systemctl enable docker
+          sudo systemctl start docker
+ 
+
          
-
-          else
-            echo "exists=false" >> $GITHUB_OUTPUT
-            
           
-          fi
-      - name: delete eks
-        run: eksctl delete cluster --name demo-cluster --region us-east-1
-
-      # # - name: Deploy to EKS
-      # #   if: steps.check-eks.outputs.exists == 'true'
-      # #   run: |
-      # #     aws eks update-kubeconfig --region us-east-1 --name demo-cluster
-      
-      # # - name: install EKS
-      # #   run: |
-      # #     curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-      # #     sudo mv /tmp/eksctl /usr/local/bin/
-      # #     eksctl version
-      # #     
-      
-
-      # # - name: Create kubeconfig
-      # #   run: eksctl create cluster --name demo-cluster --region us-east-1 
-      # # - name: Update kubeconfig
-      # #   run: |
-      # #      aws eks update-kubeconfig --name demo-cluster --region us-east-1
-      # - name: list cluster
-      #   run: aws eks list-clusters
-
-      # - name: run Deployment
-      #   run: kubectl apply -f k8s/manifests/deployment.yml
-
-      # - name: run service 
-      #   run : kubectl apply -f k8s/manifests/service.yml
-      # - name: run ingress
-      #   run: kubectl apply -f k8s/manifests/ingress.yml
-      # - name: Run EKS Cluster
-      #   run:  |
-      #     kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.11.1/deploy/static/provider/aws/deploy.yaml
-      #     kubectl get ing
-      # - name: list nodes-ips and ingress-ips
-      #   run: |
-      #     kubectl get nodes -o wide
-      #     kubectl get ing
-      #     nslookup ad9022f93e3e2472d82bc43cf56464a0-a3f0d656accd695e.elb.us-east-1.amazonaws.com
-      #     kubectl get svc
-      #     kubectl get pods
-      - name: delete ing controller
-        run: kubectl delete ing go-web-app
