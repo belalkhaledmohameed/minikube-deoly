@@ -32,20 +32,21 @@ jobs:
       - name: Deploy to Google Cloud # in this step i moved that folder i create on EC2 and i ssh on it and i will pull the update from remote branch to production branch and at exmple 2 ii push on master branch that it the development branch 
         run: |
           cd ~/Downloads
-          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100
-             sudo apt update
-             sudo apt install -y ca-certificates curl gnupg
+          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100 << 'EOF'
+            sudo apt update -y
+            sudo apt install -y ca-certificates curl gnupg
 
-             sudo install -m 0755 -d /etc/apt/keyrings
-             curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+            sudo install -m 0755 -d /etc/apt/keyrings
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
-             echo \
-                "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
-                https://download.docker.com/linux/ubuntu \
-                $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            echo \
+              "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+              https://download.docker.com/linux/ubuntu \
+              $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-             sudo apt update
-             sudo apt install -y docker-ce docker-ce-cli containerd.io
-             sudo systemctl enable docker
-             sudo systemctl start docker
-             sudo docker ps
+            sudo apt update -y
+            sudo apt install -y docker-ce docker-ce-cli containerd.io
+            sudo systemctl enable docker
+            sudo systemctl start docker
+            sudo docker ps
+          EOF
