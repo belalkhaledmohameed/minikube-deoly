@@ -32,7 +32,7 @@ jobs:
       - name: Deploy to Google Cloud # in this step i moved that folder i create on EC2 and i ssh on it and i will pull the update from remote branch to production branch and at exmple 2 ii push on master branch that it the development branch 
         run: |
           cd ~/Downloads
-          ssh -i "Dploy-pipeline.pem" ubuntu@ec2-54-146-202-100.compute-1.amazonaws.com
+          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100
       # - name: install docker 
       #   run: |
       #     sudo apt update
