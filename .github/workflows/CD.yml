@@ -70,19 +70,19 @@ jobs:
           cd ~/Downloads
           ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100
               cd ~/go-web-app/minikube-deoly/k8s/manifests/
-              kubectl apply -f deployment.yml
+                 kubectl apply -f deployment.yml
       - name: run service yaml
         run:  |
           cd ~/Downloads
           ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100
               cd ~/go-web-app/minikube-deoly/k8s/manifests/
-              kubectl apply -f service.yml
+                 kubectl apply -f service.yml
       - name: run ingress yaml
         run:  |
           cd ~/Downloads
           ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100
               cd ~/go-web-app/minikube-deoly/k8s/manifests/
-              kubectl apply -f ingress.yml
+                 kubectl apply -f ingress.yml
       - name: run ingress controller 
         run: |
           cd ~/Downloads
