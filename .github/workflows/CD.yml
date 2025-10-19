@@ -64,10 +64,10 @@ jobs:
           cd ~/Downloads
           ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100 << 'EOF'
               minikube start --driver=docker
-              
               kubectl config use-context minikube
               kubectl get nodes
           EOF
+              
 
 
       - name: run deployment yaml
