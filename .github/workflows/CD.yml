@@ -99,8 +99,11 @@ jobs:
           cd ~/Downloads
           ssh -i "Dploy-pipeline.pem" ubuntu@98.91.16.200 << 'EOF' 
             minikube addons enable ingress
-            minikube tunnel
+            sudo nohup minikube tunnel > /dev/null 2>&1 &
+
+
             kubectl get svc
+
           EOF
 
       
