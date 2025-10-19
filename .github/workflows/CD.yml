@@ -49,6 +49,9 @@ jobs:
             sudo systemctl enable docker
             sudo systemctl start docker
             sudo docker ps
+            sudo usermod -aG docker $USER
+            newgrp docker
+
 
             kubectl version --client
             curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
