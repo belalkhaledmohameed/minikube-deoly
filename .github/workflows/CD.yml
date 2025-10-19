@@ -66,18 +66,14 @@ jobs:
               minikube start --driver=docker
       - name: run deployment yaml
         run:  |
-          cd ~/Downloads
-          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100
               kubectl apply -f k8s/manifests/deployment.yml
       - name: run service yaml
         run:  |
-          cd ~/Downloads
-          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100
+
               kubectl apply -f k8s/manifests/service.yml
       - name: run ingress yaml
         run:  |
-          cd ~/Downloads
-          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100
+          
               kubectl apply -f k8s/manifests/ingress.yml
       - name: run ingress controller 
         run: |
