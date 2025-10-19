@@ -68,28 +68,32 @@ jobs:
         run:  |
           
           cd ~/Downloads
-          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100
+          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100  << 'EOF'
               cd ~/go-web-app/minikube-deoly/k8s/manifests/
-                 kubectl apply -f deployment.yml
+              kubectl apply -f deployment.yml
+          EOF
       - name: run service yaml
         run:  |
           cd ~/Downloads
-          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100
+          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100  << 'EOF'
               cd ~/go-web-app/minikube-deoly/k8s/manifests/
-                 kubectl apply -f service.yml
+              kubectl apply -f service.yml
+          EOF
       - name: run ingress yaml
         run:  |
           cd ~/Downloads
-          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100
+          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100  << 'EOF'
               cd ~/go-web-app/minikube-deoly/k8s/manifests/
-                 kubectl apply -f ingress.yml
+              kubectl apply -f ingress.yml
+          EOF
       - name: run ingress controller 
         run: |
           cd ~/Downloads
-          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100
+          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100 << 'EOF' 
             minikube addons enable ingress
             minikube tunnel
             kubectl get svc
+          EOF
 
       
       
