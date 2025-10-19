@@ -50,7 +50,6 @@ jobs:
             sudo systemctl start docker
             sudo docker ps
 
-            
             kubectl version --client
             curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
             sudo install minikube-linux-amd64 /usr/local/bin/minikube
@@ -64,10 +63,10 @@ jobs:
           cd ~/Downloads
           ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100 << 'EOF'
               minikube start --driver=docker
-              
               kubectl config use-context minikube
               kubectl get nodes
           EOF
+              
 
 
       - name: run deployment yaml
