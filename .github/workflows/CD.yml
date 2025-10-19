@@ -26,13 +26,13 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/Downloads/Dploy-pipeline.pem
           chmod 400 ~/Downloads/Dploy-pipeline.pem
-          ssh-keyscan -H 54.146.202.100 >> ~/.ssh/known_hosts
+          ssh-keyscan -H 98.91.16.200 >> ~/.ssh/known_hosts
       
       
       - name: Deploy to Google Cloud # in this step i moved that folder i create on EC2 and i ssh on it and i will pull the update from remote branch to production branch and at exmple 2 ii push on master branch that it the development branch 
         run: |
           cd ~/Downloads
-          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100 << 'EOF'
+          ssh -i "Dploy-pipeline.pem" ubuntu@98.91.16.200 << 'EOF'
             sudo apt update -y
             sudo apt install -y ca-certificates curl gnupg
 
@@ -61,7 +61,7 @@ jobs:
       - name: start minikube cluster 
         run:  |
           cd ~/Downloads
-          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100 << 'EOF'
+          ssh -i "Dploy-pipeline.pem" ubuntu@98.91.16.200 << 'EOF'
               minikube start --driver=docker
               kubectl config use-context minikube
               kubectl get nodes
@@ -73,28 +73,28 @@ jobs:
         run:  |
           
           cd ~/Downloads
-          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100  << 'EOF'
+          ssh -i "Dploy-pipeline.pem" ubuntu@98.91.16.200  << 'EOF'
               cd ~/go-web-app/minikube-deoly/k8s/manifests/
               kubectl apply -f deployment.yml
           EOF
       - name: run service yaml
         run:  |
           cd ~/Downloads
-          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100  << 'EOF'
+          ssh -i "Dploy-pipeline.pem" ubuntu@98.91.16.200  << 'EOF'
               cd ~/go-web-app/minikube-deoly/k8s/manifests/
               kubectl apply -f service.yml
           EOF
       - name: run ingress yaml
         run:  |
           cd ~/Downloads
-          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100  << 'EOF'
+          ssh -i "Dploy-pipeline.pem" ubuntu@98.91.16.200  << 'EOF'
               cd ~/go-web-app/minikube-deoly/k8s/manifests/
               kubectl apply -f ingress.yml
           EOF
       - name: run ingress controller 
         run: |
           cd ~/Downloads
-          ssh -i "Dploy-pipeline.pem" ubuntu@54.146.202.100 << 'EOF' 
+          ssh -i "Dploy-pipeline.pem" ubuntu@98.91.16.200 << 'EOF' 
             minikube addons enable ingress
             minikube tunnel
             kubectl get svc
